@@ -13,18 +13,21 @@ export default function Todo() {
     try {
       await audioRef.current.play();
       setIsPlaying(true);
-    } catch (error) {
-      console.log('Song error:', error);
+    } catch (err) {
+      console.log('Audio error:', err);
+      setIsPlaying(false);
     }
   };
 
   const toggleMusic = async () => {
+    if (!audioRef.current) return;
+
     if (audioRef.current.paused) {
       try {
         await audioRef.current.play();
         setIsPlaying(true);
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.log('Audio error:', err);
       }
     } else {
       audioRef.current.pause();
@@ -34,50 +37,96 @@ export default function Todo() {
 
   return (
     <div className="container">
-      <audio ref={audioRef} src="/song.mpeg" loop />
+      <audio ref={audioRef} src="/song.mpeg" loop preload="auto" />
 
       <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
         .container {
           min-height: 100vh;
           display: flex;
           justify-content: center;
           align-items: center;
-          background: linear-gradient(135deg, #ff758c, #ff7eb3, #a18cd1);
-          font-family: Arial, sans-serif;
-          padding: 20px;
-          position: relative;
+          background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #a18cd1 100%);
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           overflow: hidden;
+          position: relative;
+          padding: 20px;
         }
-        .magic-btn, .music-btn {
-          padding: 15px 25px;
-          border: none;
-          border-radius: 30px;
-          background: white;
-          color: #ff2a5f;
-          font-size: 18px;
+
+        .heart-bg {
+          position: absolute;
+          font-size: 24px;
+          animation: floatUp 6s infinite ease-in;
+          opacity: 0.7;
+          user-select: none;
+        }
+
+        @keyframes floatUp {
+          0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+          50% { opacity: 0.8; }
+          100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        .magic-btn {
+          padding: 18px 40px;
+          font-size: 22px;
           font-weight: bold;
+          color: #ff2a5f;
+          background: white;
+          border: none;
+          border-radius: 50px;
           cursor: pointer;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          animation: pulse 1.5s infinite;
+          transition: transform 0.3s;
+          z-index: 10;
         }
+
+        .magic-btn:hover {
+          transform: scale(1.08);
+        }
+
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+          70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
         .card {
-          background: rgba(255,255,255,0.25);
+          background: rgba(255, 255, 255, 0.25);
           backdrop-filter: blur(15px);
-          border: 2px solid white;
-          border-radius: 25px;
-          padding: 30px 20px;
+          -webkit-backdrop-filter: blur(15px);
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          border-radius: 30px;
+          padding: 35px 25px;
           max-width: 400px;
           width: 100%;
           text-align: center;
-          z-index: 2;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+          animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          z-index: 10;
         }
+
+        @keyframes popIn {
+          0% { transform: scale(0.5); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+
         .photo-frame {
           width: 200px;
           height: 200px;
           margin: 0 auto 20px;
           border-radius: 50%;
-          padding: 5px;
-          background: #ff0844;
+          padding: 6px;
+          background: linear-gradient(45deg, #ff0844, #ffb199, #ff0844);
+          box-shadow: 0 10px 25px rgba(255, 8, 68, 0.4);
         }
+
         .photo-frame img {
           width: 100%;
           height: 100%;
@@ -85,25 +134,45 @@ export default function Todo() {
           border-radius: 50%;
           border: 3px solid white;
         }
+
         .title {
-          color: white;
-          font-size: 28px;
-          margin-bottom: 15px;
+          font-size: 32px;
+          color: #fff;
+          text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          margin-bottom: 12px;
         }
+
+        .title-heart {
+          display: inline-block;
+          animation: heartbeat 0.8s infinite;
+        }
+
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          25% { transform: scale(1.3); }
+          40% { transform: scale(1); }
+          60% { transform: scale(1.3); }
+        }
+
         .message {
-          color: white;
           font-size: 17px;
+          color: #fff;
           line-height: 1.6;
+          font-weight: 500;
+          text-shadow: 0 1px 5px rgba(0,0,0,0.15);
           margin-bottom: 20px;
         }
-        .heart-bg {
-          position: absolute;
-          animation: floatUp 6s infinite ease-in;
-          font-size: 25px;
-        }
-        @keyframes floatUp {
-          from { transform: translateY(100vh); }
-          to { transform: translateY(-100vh); }
+
+        .music-btn {
+          padding: 10px 22px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #ff2a5f;
+          background: rgba(255, 255, 255, 0.9);
+          border: none;
+          border-radius: 25px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
       `}</style>
 
@@ -130,7 +199,9 @@ export default function Todo() {
             <img src={gfPic} alt="My Love" />
           </div>
 
-          <h1 className="title">❤️ I Love You Jaan ❤️</h1>
+          <h1 className="title">
+            I <span className="title-heart">❤️</span> Sahiba
+          </h1>
 
           <p className="message">
             तुम मेरी दुनिया की सबसे खूबसूरत खुशी हो।
@@ -139,7 +210,7 @@ export default function Todo() {
           </p>
 
           <button className="music-btn" onClick={toggleMusic}>
-            {isPlaying ? '⏸️ गाना रोकें' : '🎵 गाना चलाएं'}
+            {isPlaying ? '⏸️ गाना रोकें' : '🎶 Play Our Song ❤️'}
           </button>
         </div>
       )}
