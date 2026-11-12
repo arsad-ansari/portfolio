@@ -79,7 +79,7 @@ export default function Todo() {
             <div className="welcome-flowers">🌹 💐 🌹</div>
 
             <button onClick={() => setStage(1)}>
-              Start Our Surprise ❤️
+              Meri Jaan, Yahan Click Karo ❤️
             </button>
 
             <p className="bottom-note">
@@ -117,7 +117,7 @@ export default function Todo() {
             </p>
 
             <button onClick={openGift} disabled={opening}>
-              {opening ? "Opening Your Gift... ✨" : "Open My Gift 🎁"}
+              {opening ? "Opening Your Gift... ✨" : "Jaan, Apna Gift Kholo 🎁"}
             </button>
           </section>
         )}
@@ -142,7 +142,7 @@ export default function Todo() {
             </p>
 
             <button onClick={() => setStage(3)}>
-              Read My Letter 💌
+              Meri Jaan, Ek Baat Suno 💌
             </button>
           </section>
         )}
@@ -185,7 +185,7 @@ export default function Todo() {
             </div>
 
             <button onClick={() => setStage(4)}>
-              One Last Surprise ✨
+              Jaan, Aakhri Surprise Dekho 💖
             </button>
           </section>
         )}
@@ -211,7 +211,7 @@ export default function Todo() {
             </p>
 
             <button onClick={playSong}>
-              {isPlaying ? "⏸️ Pause Our Song" : "🎶 Play Our Song"}
+              {isPlaying ? "⏸️ Pause Our Song" : "Sahiba, Ye Song Tumhare Liye ❤️"}
             </button>
 
             <p className="bottom-note">
