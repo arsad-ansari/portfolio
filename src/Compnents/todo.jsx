@@ -164,11 +164,12 @@ export default function Todo() {
               Tum meri zindagi ki sabse khoobsurat
               khushi ho.
 
-              Tumhari ek muskurahat mera poora din
-              bana deti hai.
+              tumhe apni zindagi main paakar main bahut khush hoon.
+
+              Moharram main tumhari ek jhalak paane ka intezaar rehta tha.
 
               Tum sirf meri mohabbat nahi,
-              meri jaan ho, meri duniya ho.
+              meri jaan ho, meri poori duniya ho.
 
               Main chahta hoon ki tum hamesha
               khush raho aur muskurati raho.
