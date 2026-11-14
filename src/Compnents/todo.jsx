@@ -9,10 +9,48 @@ export default function Todo() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  const openGift = () => {
+  const openGift = async () => {
     if (opening) return;
 
     setOpening(true);
+
+    try {
+      const AudioContext =
+        window.AudioContext || window.webkitAudioContext;
+
+      if (AudioContext) {
+        const audio = new AudioContext();
+        await audio.resume();
+
+        [880, 1174].forEach((frequency, index) => {
+          const oscillator = audio.createOscillator();
+          const gain = audio.createGain();
+
+          oscillator.type = "sine";
+          oscillator.frequency.value = frequency;
+
+          gain.gain.setValueAtTime(0.0001, audio.currentTime);
+          gain.gain.exponentialRampToValueAtTime(
+            0.08,
+            audio.currentTime + 0.05 + index * 0.15
+          );
+          gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audio.currentTime + 0.7 + index * 0.15
+          );
+
+          oscillator.connect(gain);
+          gain.connect(audio.destination);
+
+          oscillator.start(audio.currentTime + index * 0.15);
+          oscillator.stop(audio.currentTime + 0.9);
+        });
+
+        setTimeout(() => audio.close(), 1500);
+      }
+    } catch (error) {
+      console.log("Gift sound error:", error);
+    }
 
     setTimeout(() => {
       setStage(2);
@@ -62,42 +100,40 @@ export default function Todo() {
         </div>
 
         {stage === 0 && (
-          <section className="welcome-screen">
+          <div className="welcome-screen">
             <div className="welcome-heart">❤️</div>
-            <p className="small-heading">MADE WITH LOVE</p>
 
-            <h1>
+            <div className="small-heading">MADE WITH LOVE</div>
+
+            <h1 className="welcome-message">
               Hey <span>Sahiba</span>!
             </h1>
 
-            <p className="welcome-message">
-              Meri jaan, meri duniya...
-              <br />
-              Aaj tumhare liye kuch bahut special hai.
+            <p>
+              Meri jaan, meri duniya... Aaj tumhare liye
+              kuch bahut special hai.
             </p>
 
-            <div className="welcome-flowers">🌹 💐 🌹</div>
+            <div className="welcome-flowers">
+              🌹 💐 🌹
+            </div>
 
             <button onClick={() => setStage(1)}>
-              Meri Jaan, Yahan Click Karo ❤️
+              Meri jaan, yahan click karo ❤️
             </button>
 
-            <p className="bottom-note">
-              A little piece of my heart, just for you.
-            </p>
-          </section>
+            <p>Just for you, my love ❤️</p>
+          </div>
         )}
 
         {stage === 1 && (
-          <section className="gift-screen">
-            <p className="small-heading">JUST FOR YOU</p>
+          <div className="gift-screen">
+            <div className="small-heading">JUST FOR YOU</div>
 
-            <h1>
-              A Gift For <span>My World</span>
-            </h1>
+            <h1>A Gift For My World</h1>
 
             <div className={`gift-scene ${opening ? "opening" : ""}`}>
-              <div className="gift-rays">✨</div>
+              <div className="gift-rays"></div>
               <div className="gift-light">❤️</div>
 
               <div className="gift-box">
@@ -113,112 +149,119 @@ export default function Todo() {
             </div>
 
             <p className="gift-message">
-              A little gift filled with all my love.
+              Meri jaan, tumhare liye ek chhota sa gift ❤️
             </p>
 
             <button onClick={openGift} disabled={opening}>
-              {opening ? "Opening Your Gift... ✨" : "Jaan, Apna Gift Kholo 🎁"}
+              {opening ? "Opening... ❤️" : "Jaan, apna gift kholo 🎁"}
             </button>
-          </section>
+          </div>
         )}
 
         {stage === 2 && (
-          <section className="photo-screen reveal">
-            <p className="small-heading">MY FAVOURITE PERSON</p>
+          <div className="photo-screen reveal">
+            <div className="small-heading">MY WORLD</div>
 
-            <h1>
-              My Beautiful <span>Sahiba</span> ❤️
-            </h1>
+            <h1>My Beautiful Sahiba ❤️</h1>
 
             <div className="photo-frame">
               <img src={gfPic} alt="Sahiba" />
-              <div className="photo-caption">
-                My favourite person ❤️
-              </div>
             </div>
 
-            <p className="welcome-message">
-              Meri duniya ki sabse khoobsurat muskurahat.
+            <h3 className="photo-caption">
+              My favourite person ❤️
+            </h3>
+
+            <p>
+              Meri jaan, tum meri zindagi ki sabse khoobsurat
+              khushi ho. ❤️
             </p>
 
             <button onClick={() => setStage(3)}>
-              Meri Jaan, Ek Baat Suno 💌
+              Meri jaan, ek baat suno 💗
             </button>
-          </section>
+          </div>
         )}
 
         {stage === 3 && (
-          <section className="letter-screen reveal">
+          <div className="letter-screen reveal">
             <div className="letter-icon">💌</div>
-            <p className="small-heading">A MESSAGE FROM MY HEART</p>
 
-            <h1>
-              Dear <span>Sahiba</span>...
-            </h1>
+            <div className="small-heading">FROM MY HEART</div>
+
+            <h2>Dear Sahiba...</h2>
 
             <div className="love-letter">
               <p className="letter-greeting">
                 Meri pyaari Sahiba ❤️
               </p>
 
-              Tum meri zindagi ki sabse khoobsurat
-              khushi ho.
+              <p>
+                Tum meri zindagi ki sabse khoobsurat khushi ho.
+              </p>
 
-              tumhe apni zindagi main paakar main bahut khush hoon.
+              <p>
+                Tumhe apni zindagi mein paakar main bahut khush hoon.
+              </p>
 
-              Moharram main tumhari ek jhalak paane ka intezaar rehta tha.
+              <p>
+                Moharram mein tumhari ek jhalak paane ka intezaar rehta tha.
+              </p>
 
-              Tum sirf meri mohabbat nahi,
-              meri jaan ho, meri poori duniya ho.
+              <p>
+                Tum sirf meri mohabbat nahi, meri jaan ho,
+                meri poori duniya ho.
+              </p>
 
-              Main chahta hoon ki tum hamesha
-              khush raho aur muskurati raho.
+              <p>
+                Main chahta hoon ki tum hamesha khush raho
+                aur muskurati raho.
+              </p>
 
-              <p className="letter-ending">
+              <p>
                 I Love You Forever! ❤️
               </p>
 
-              <p className="letter-sign">
+              <p className="letter-ending">
                 Only Yours,
-                <br />
+              </p>
+
+              <p className="letter-sign">
                 With All My Love ❤️
               </p>
             </div>
 
             <button onClick={() => setStage(4)}>
-              Jaan, Aakhri Surprise Dekho 💖
+              Jaan, aakhri surprise dekho 💌
             </button>
-          </section>
+          </div>
         )}
 
         {stage === 4 && (
-          <section className="final-screen reveal">
+          <div className="final-screen reveal">
             <div className="final-heart">❤️</div>
 
-            <p className="small-heading">MY FOREVER PERSON</p>
+            <div className="small-heading">FOREVER & ALWAYS</div>
 
-            <h1>
-              I <span>❤️</span> Sahiba
+            <h1 className="final-message">
+              I ❤️ Sahiba
             </h1>
 
             <h2>You Are My World</h2>
 
-            <p className="welcome-message">
-              Meri jaan, meri duniya.
-              <br />
-              Meri har khushi tumse hai.
-              <br />
+            <p>
+              Meri jaan, meri duniya. Meri har khushi tumse hai.
               Forever & Always! ✨
             </p>
 
             <button onClick={playSong}>
-              {isPlaying ? "⏸️ Pause Our Song" : "Sahiba, Ye Song Tumhare Liye ❤️"}
+              {isPlaying
+                ? "Song Pause Karo ❤️"
+                : "Jaan, ye song tumhare liye 🎶"}
             </button>
 
-            <p className="bottom-note">
-              Made with all my love, just for you ❤️
-            </p>
-          </section>
+            <p>Made with all my love for you ❤️</p>
+          </div>
         )}
       </main>
 
