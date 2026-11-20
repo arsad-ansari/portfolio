@@ -4,7 +4,7 @@ import Todo from './Compnents/todo'
 const App = () => {
   return (
     <div>
-      <Todo />
+      
     </div>
   )
 }
